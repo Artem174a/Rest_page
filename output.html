@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tables</title>
+    <style>
+         /* Стили для вкладок */
+        .tabs {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 10px 0;
+            margin-top: 20px;
+        }
+
+        .tabs li {
+            padding: 10px 20px;
+            color: #333;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tabs li.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .tabs li:hover {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            margin: 10px;
+            text-align: center;
+        }
+
+        table {
+            width: 95%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin: 2%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ccc;
+            overflow: hidden; /* Скрываем всё, что выходит за границы ячейки */
+            max-width: 200px; /* Ограничиваем максимальную ширину ячейки */
+        }
+
+        th {
+            background-color: #007bff6d;
+            color: black;
+        }
+        
+        td:hover {
+            background-color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .scrollable-table {
+            max-height: 820px;
+            overflow: auto;
+        }
+
+        /* Стили для поиска */
+        #search-input {
+            width: 90%;
+            padding: 10px;
+            margin: 2%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            font-size: 16px;
+            background-color: #f4f4f4;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Стили для кнопки "Открыть/Скрыть" */
+        .toggle-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <ul class="tabs">
+            <li onclick="showTable('table1')" class="active">Рестораны</li>
+            <li onclick="showTable('table2')" class="">Курьеры</li>
+            <li onclick="showTable('table3')" class="">Все доставки</li>
+        </ul>
+    </div>
+    <input type="text" id="search-input" placeholder="Поиск">
+    <div class="tab-content">
+        <div class="table" id="table1" style="">
+            <table>
+                <tr>
+                    
+                        <th>Username</th>
+                    
+                        <th>Ресторан</th>
+                    
+                        <th>Привилегия</th>
+                    
+                        <th>Всего заказов</th>
+                    
+                </tr>
+                <tr>
+                    
+                        <td>@Rosa_i_mimoza</td>
+                    
+                        <td>Пиватория</td>
+                    
+                        <td>3</td>
+                    
+                        <td>3</td>
+                    
+                </tr>
+                
+            </table>
+        </div>
+        <div class="table" id="table2" style="display: none;">
+            <table>
+                <tr>
+                    
+                        <th>Username</th>
+                    
+                        <th>Привилегия</th>
+                    
+                        <th>Всего заказов</th>
+                    
+                        <th>Успешных заказов</th>
+                    
+                </tr>
+                <tr>
+                    
+                        <td>@Arebooz</td>
+                    
+                        <td>1</td>
+                    
+                        <td>6</td>
+                    
+                        <td>2</td>
+                    
+                </tr>
+                
+                    <tr>
+                        
+                            <td>@iliaul2</td>
+                        
+                            <td>1</td>
+                        
+                            <td>4</td>
+                        
+                            <td>0</td>
+                        
+                    </tr>
+                
+            </table>
+        </div>
+        <div class="table" id="table3" style="display: none;">
+            <table>
+                <tr>
+                    
+                        <th>ID Заказа</th>
+                    
+                        <th>Курьер</th>
+                    
+                        <th>Заказчик</th>
+                    
+                        <th>Ресторан</th>
+                    
+                        <th>Тип Заказа</th>
+                    
+                        <th>От адреса</th>
+                    
+                        <th>До адреса</th>
+                    
+                        <th>Комментарий</th>
+                    
+                        <th>Время публикации</th>
+                    
+                        <th>Курьер принял в</th>
+                    
+                        <th>Цена</th>
+                    
+                </tr>
+                <tr>
+                    
+                        <td>56986514380</td>
+                    
+                        <td>@Arebooz</td>
+                    
+                        <td>@Rosa_i_mimoza</td>
+                    
+                        <td>Пиватория</td>
+                    
+                        <td>Доставка</td>
+                    
+                        <td>Перовохуйская 13</td>
+                    
+                        <td>Второхуйская 26</td>
+                    
+                        <td>Неси не урони</td>
+                    
+                        <td>2023-05-20 00:00:00</td>
+                    
+                        <td>2023-05-20 00:00:30</td>
+                    
+                        <td>100 хуёв</td>
+                    
+                </tr>
+                
+                    <tr>
+                        
+                            <td>56986514380</td>
+                        
+                            <td>@iliaul2</td>
+                        
+                            <td>@Rosa_i_mimoza</td>
+                        
+                            <td>Пиватория</td>
+                        
+                            <td>Доставка</td>
+                        
+                            <td>Первая 1</td>
+                        
+                            <td>Десятая 145</td>
+                        
+                            <td>Не пропади по дороге</td>
+                        
+                            <td>2023-05-20 05:30:00</td>
+                        
+                            <td>2023-05-20 05:30:30</td>
+                        
+                            <td>100 хуёв</td>
+                        
+                    </tr>
+                
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript код для вкладок
+        function showTable(tableId) {
+            const tabs = document.querySelectorAll('.tabs li');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+    
+            const tables = document.querySelectorAll('.table');
+            tables.forEach(table => {
+                table.style.display = 'none';
+            });
+    
+            const tableToShow = document.getElementById(tableId);
+            if (tableToShow) {
+                tableToShow.style.display = 'table';
+    
+                // Выделяем выбранную вкладку
+                const activeTab = document.querySelector(`.tabs li[onclick="showTable('${tableId}')]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            }
+        }
+    
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const currentTable = document.querySelector('.table[style="display: table;"]');
+            const rows = currentTable.querySelectorAll('tr');
+            // Начинаем с 1, чтобы пропустить первую строку (оглавление)
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.querySelectorAll('td');
+                let found = false;
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(searchValue)) {
+                        found = true;
+                    }
+                });
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        // Устанавливаем первоначально выбранной таблицей первую
+        showTable('table3');
+    </script>
+</body>
+</html>

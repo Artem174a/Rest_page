@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #bfdede;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 10px;
+        }
+
+        .orders-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .order {
+            max-width: calc(50% - 20px); /* 50% ширины, с учетом отступов */
+            min-width: 370px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.54);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8.6px);
+            -webkit-backdrop-filter: blur(8.6px);
+        }
+
+        @media (max-width: 768px) {
+            .order {
+                max-width: 100%; /* На мобильных устройствах, блоки занимают всю ширину */
+                margin-right: 0;
+            }
+        }
+
+
+        .card-head {
+        }
+
+        .comment-block {
+            background-color: #f5f5f5; /* Цвет фона блока */
+            border: 1px solid #ddd; /* Граница блока */
+            border-radius: 5px; /* Скругление углов */
+            padding: 10px; /* Отступы внутри блока */
+            margin: 10px 0; /* Внешние отступы блока */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для блока */
+        }
+
+        .order hr {
+        margin-top: 1px;
+        }
+
+        .Price {
+        text-align: right;
+        margin-right: 0px;
+        }
+
+        .material-icons {
+            font-size: 20px;
+        }
+
+        .title-head {
+            font-size: 23px;
+        }
+        .title {
+            font-size: 23px;
+        }
+        .order-id, .order-type {
+            color: #635f5ff4;
+        }
+        .order-type {
+            color: #327f34;
+        }
+        .Restaurant {
+            font-size: 30px;
+        }
+        .my-card {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.2s ease-in-out; /* Добавляем анимацию */
+        }
+
+        .my-card.visible {
+            max-height: 1000px; /* Максимальная высота для анимации */
+        }
+        .hidden {
+            display: none; /* Скрываем элементы по умолчанию */
+        }
+
+        .open-button {
+            background-color: #0074c3; /* Цвет фона кнопки */
+            color: #fff; /* Цвет текста */
+            text-decoration: none; /* Убираем подчеркивание у ссылки */
+            padding: 2px 10px; /* Внутренние отступы кнопки */
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Плавные переходы цвета */
+        }
+
+        .open-button:hover {
+            background-color: #005a9f; /* Изменение цвета фона при наведении */
+        }
+
+        /* Стили для контейнера строки поиска */
+        .search-container {
+            text-align: center; /* Центрируем содержимое */
+            margin: 10px 0; /* Пространство сверху и снизу, по желанию */
+        }
+
+        /* Стили для поисковой строки */
+        #search-input {
+            width: 100%;
+            max-width: 400px; /* Ширина ограничена для лучшего визуального восприятия */
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            font-size: 16px;
+            background-color: #f4f4f4;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Кнопка для открытия/закрытия сайдбара на мобильных устройствах */
+        .sidebar-button {
+            background-color: #0074c3; /* Цвет фона кнопки */
+            color: #fff; /* Цвет текста */
+            text-decoration: none; /* Убираем подчеркивание у ссылки */
+            padding: 5px 5px 3px 5px; /* Внутренние отступы кнопки */
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            position: fixed;
+            top: 33px;
+            right: 20px;
+            z-index: 1; /* Размещаем кнопку поверх контента */
+            transition: background-color 0.3s, color 0.3s; /* Плавные переходы цвета */
+        }
+
+        .sidebar-button:hover {
+            background-color: #005a9f; /* Изменение цвета фона при наведении */
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px; /* Скрываем сайдбар за левой границей экрана */
+            width: 300px;
+            height: 80px;
+            background-color: #0074c3;
+            color: #fff;
+            transition: left 0.3s;
+            flex-direction: row; /* Горизонтальное расположение элементов */
+            align-items: center; /* Выравнивание элементов по вертикали по центру */
+            justify-content: space-between; /* Равномерное распределение элементов */
+        }
+
+        .sidebar.open {
+            left: 0; /* Показываем сайдбар при нажатии на кнопку */
+        }
+
+        .sidebar span {
+            margin-right: 20px; /* Расстояние между элементами */
+            font-size: 24px; /* Размер иконок */
+            color: #fff; /* Цвет иконок */
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar" id="sidebar">
+        <span><i class="material-icons">monitoring</i></span>
+        <span><i class="material-icons">storefront</i></span>
+        <span><i class="material-icons">group</i></span>
+        <span><i class="material-icons">local shipping</i></span>
+    </div>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Поиск"><button class="sidebar-button" id="open-sidebar"><i class="material-icons">menu</i></button>
+    </div>
+    <div class="orders-container">
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+            <div class="title-head">
+                <span class="order-id">#123456789</span>
+                <span class="order-type">Доставка</span>
+                <span class="Price">1000
+                    <i class="material-icons">currency_ruble</i>
+                </span>
+            </div>
+            <hr>
+            <div class="card-head">
+                <div class="title">
+                    <i class="material-icons">restaurant</i>
+                    <span class="Restaurant">Пивоварня</span>
+                </div>
+                <div class="title">
+                    ╠Курьер: <span class="Courier">@TheFirst</span>
+                </div>
+                <div class="title">
+                    ╚Заказчик: <span class="Customer">@TheFirst</span>
+                </div>
+            </div>
+            <br>
+            <div class="my-card">
+                <div class="title">
+                    От: <span class="Point-a">Первая умная д.23</span>
+                </div>
+                <div class="title">
+                    До: <span class="Point-b">Вторая умная д.23</span>
+                </div>
+                <br>
+                <div class="comment-block">
+                    <div class="title">
+                        <i class="material-icons">notes</i>
+                        <span class="Commentary">Не съешь по пути</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <i class="material-icons">schedule_send</i>
+                    <span class="Time-publish">2023-10-22</span>
+                </div>
+                <div class="title">
+                    <i class="material-icons">local_shipping</i>
+                    <span class="Time-start">2023-10-22</span>
+                </div>
+            </div>
+            <a href="#" class="open-button">Открыть</a>
+        </div>
+        <div class="order">
+        <div class="title-head">
+            <span class="order-id">#123456789</span>
+            <span class="order-type">Доставка</span>
+            <span class="Price">1000
+                <i class="material-icons">currency_ruble</i>
+            </span>
+        </div>
+        <hr>
+        <div class="card-head">
+            <div class="title">
+                <i class="material-icons">restaurant</i>
+                <span class="Restaurant">Пивоварня</span>
+            </div>
+            <div class="title">
+                ╠Курьер: <span class="Courier">@TheFirst</span>
+            </div>
+            <div class="title">
+                ╚Заказчик: <span class="Customer">@TheFirst</span>
+            </div>
+        </div>
+        <br>
+        <div class="my-card">
+            <div class="title">
+                От: <span class="Point-a">Первая умная д.23</span>
+            </div>
+            <div class="title">
+                До: <span class="Point-b">Вторая умная д.23</span>
+            </div>
+            <br>
+            <div class="comment-block">
+                <div class="title">
+                    <i class="material-icons">notes</i>
+                    <span class="Commentary">Не съешь по пути</span>
+                </div>
+            </div>
+            <div class="title">
+                <i class="material-icons">schedule_send</i>
+                <span class="Time-publish">2023-10-22</span>
+            </div>
+            <div class="title">
+                <i class="material-icons">local_shipping</i>
+                <span class="Time-start">2023-10-22</span>
+            </div>
+        </div>
+        <a href="#" class="open-button">Открыть</a>
+    </div>
+    </div>
+
+
+    <!-- Добавьте другие блоки данных как необходимо -->
+
+</div>
+<script>
+    // Получаем ссылки на все кнопки "Открыть" и соответствующие блоки "my-card"
+    const openButtons = document.querySelectorAll('.open-button');
+    const myCards = document.querySelectorAll('.my-card');
+
+    // Добавляем обработчик события для каждой кнопки "Открыть"
+    openButtons.forEach((openButton, index) => {
+        openButton.addEventListener('click', function (e) {
+            e.preventDefault(); // Предотвращаем переход по ссылке
+
+            // Переключаем видимость блока my-card с добавлением/удалением класса "visible"
+            if (myCards[index].classList.contains('visible')) {
+                openButton.textContent = 'Открыть';
+                myCards[index].classList.remove('visible');
+            } else {
+                myCards[index].classList.add('visible');
+                openButton.textContent = 'Скрыть';
+            }
+        });
+    });
+    const openButton = document.getElementById('open-sidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    openButton.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+</script>
+</body>
+</html>
